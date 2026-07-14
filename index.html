@@ -830,8 +830,8 @@
           <button class="subhead" data-page="group-character">Character</button>
 
           <button class="subhead" data-page="group-hair">Hair</button>
-          <button class="leaf-btn" data-page="hair-long">Long Hair</button>
-          <button class="leaf-btn" data-page="hair-short">Short hair</button>
+          <button class="leaf-btn" data-page="hair-long">Long</button>
+          <button class="leaf-btn" data-page="hair-short">Short</button>
           <button class="leaf-btn" data-page="hair-pony">Ponytail</button>
           <button class="leaf-btn" data-page="hair-twin">Twintail</button>
           <button class="leaf-btn" data-page="hair-etc">Etc</button>
@@ -1189,15 +1189,15 @@
 <script>
   const CATEGORIES = [
     "hair-long","hair-short","hair-pony","hair-twin","hair-etc",
-    "cloth-easy","cloth-daily","cloth-lovely","cloth-modern","cloth-etc",
+    "cloth-daily","cloth-lovely","cloth-modern","cloth-etc",
     "acc-hair","acc-lens","acc-etc",
     "character-item"
   ];
 
   const CATEGORY_LABEL = {
-    "hair-long":"Long Hair", "hair-short":"Short hair", "hair-pony":"Ponytail", "hair-twin":"Twintail", "hair-etc":"Etc",
-    "cloth-easy":"Easy Wear", "cloth-daily":"Daily", "cloth-lovely":"Lovely", "cloth-modern":"Modern / Chic", "cloth-etc":"Etc",
-    "acc-hair":"Hair acc", "acc-lens":"Lens", "acc-etc":"Etc",
+    "hair-long":"Hair / Long", "hair-short":"Hair / Short", "hair-pony":"Hair / Pony", "hair-twin":"Hair / Twin", "hair-etc":"Hair / Etc",
+    "cloth-daily":"Cloth / Daily", "cloth-lovely":"Cloth / Lovely", "cloth-modern":"Cloth / Modern", "cloth-etc":"Cloth / Etc",
+    "acc-hair":"Acc / Hair", "acc-lens":"Acc / Lens", "acc-etc":"Acc / Etc",
     "character-item":"캐릭터"
   };
 
@@ -1220,7 +1220,7 @@
   // ASSETS 시트 열 구성 (첫 줄은 헤더, 그대로 이름 사용):
   //   name | category | tags | status | link | image_url | desc
   //   - category: hair-long / hair-short / hair-pony / hair-twin / hair-etc /
-  //               cloth-easy / cloth-daily / cloth-lovely / cloth-modern / cloth-etc /
+  //               cloth-daily / cloth-lovely / cloth-modern / cloth-etc /
   //               acc-hair / acc-lens / acc-etc / character-item  중 하나
   //               (character-item = 헤어/의상/액세서리가 아닌 캐릭터(아바타 본체) 자체 상품)
   //   - tags: 캐릭터 이름을 콤마(,)로 구분 (예: 마누카,밀피)
