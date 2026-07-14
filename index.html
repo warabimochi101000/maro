@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARO Commission</title>
+<style>
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+      font-weight: 100;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+      font-weight: 200;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+      font-weight: 300;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+      font-weight: 800;
+      font-display: swap;
+  }
+  @font-face {
+      font-family: 'Pretendard';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+      font-weight: 900;
+      font-display: swap;
+  }
+
+  :root{
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --panel-soft: #f5f5f5;
+    --ink: #111111;
+    --ink-soft: #666666;
+    --ink-faint: #a3a3a3;
+    --accent: #111111;
+    --line: #e6e6e6;
+    --radius: 10px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  .app{
+    display: grid;
+    grid-template-columns: 252px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    background: var(--bg);
+    border-right: 1px solid var(--line);
+    padding: 40px 0 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand{
+    padding: 0 28px 28px;
+    margin-bottom: 12px;
+  }
+  .brand-name{
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .brand-tag{
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+  }
+
+  .content-search{
+    display: none;
+    justify-content: flex-end;
+    margin-bottom: 28px;
+  }
+  .content-search input{
+    width: 260px;
+    max-width: 100%;
+    padding: 10px 14px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--panel-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    outline: none;
+  }
+  .content-search input::placeholder{ color: var(--ink-faint); }
+  .content-search input:focus{ border-color: var(--ink); }
+
+  nav{ padding: 0 14px; }
+
+  .nav-group{ margin-bottom: 2px; }
+
+  .tag-btn, .simple-btn{
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 14px;
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    letter-spacing: 0.01em;
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .tag-btn:hover, .simple-btn:hover{ background: var(--panel-soft); transform: translateX(2px); }
+  .tag-btn:active, .simple-btn:active, .leaf-btn:active{ transform: translateY(1px) scale(0.98); }
+  .tag-btn.active, .simple-btn.active{
+    background: var(--panel-soft);
+    border-left-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .tag-btn .chev{
+    margin-left: auto;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+    transition: transform 0.3s ease;
+  }
+  .tag-btn.open .chev{ transform: rotate(90deg); }
+
+  .subnav{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .subnav.open{ max-height: 900px; }
+
+  .subhead{
+    display: block;
+    width: 100%;
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 14px;
+    padding: 9px 14px;
+    font-weight: 700;
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    text-align: left;
+    cursor: pointer;
+  }
+  .subhead:hover{ color: var(--ink); background: var(--panel-soft); }
+  .subhead.active{ color: var(--ink); background: var(--panel-soft); }
+
+  .leaf-btn{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 9px 14px 9px 28px;
+    font-size: 0.93rem;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .leaf-btn:hover{ background: var(--panel-soft); color: var(--ink); transform: translateX(2px); }
+  .leaf-btn.active{ border-left-color: var(--ink); color: var(--ink); font-weight: 600; background: var(--panel-soft); }
+
+  .nav-divider{
+    height: 1px;
+    background: var(--line);
+    margin: 14px 14px;
+  }
+
+  /* ---------- main content ---------- */
+  main{ padding: 56px 64px 80px; max-width: 1180px; margin: 0 auto; width: 100%; }
+
+  .page{ display:none; }
+  .page.active{
+    display:block;
+    animation: floatIn 0.8s ease;
+  }
+  @keyframes floatIn{
+    from{ opacity: 0; transform: translateY(14px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow{
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  /* ---- hero / main page ---- */
+  .hero-card{
+    padding: 20px 0 0;
+  }
+
+  .gif-frame{
+    position: relative;
+    width: 100%;
+    margin-top: -76px;
+    height: 62vh;
+    min-height: 320px;
+    max-height: 640px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: floatBob 8s ease-in-out infinite;
+  }
+  @keyframes floatBob{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-8px); }
+  }
+  .gif-frame .slide-stack{
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+  }
+  .gif-frame .slide-img{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+  .gif-frame .slide-img.active{ opacity: 1; }
+  .gif-frame .gif-placeholder{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    background: linear-gradient(to bottom, #eeeeee 0%, #eeeeee 70%, rgba(255,255,255,0) 100%);
+  }
+
+  .greeting{
+    font-size: 2.2rem;
+    line-height: 1.5;
+    font-weight: 700;
+    margin: 0 0 22px;
+    text-align: center;
+  }
+  .hero-desc{
+    color: var(--ink-soft);
+    font-size: 1.15rem;
+    line-height: 1.85;
+    max-width: 620px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+
+  .link-row{ display:flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+  .shop-tag{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 32px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .shop-tag:hover{ transform: translateY(-3px); }
+  .shop-tag:active{ transform: translateY(0) scale(0.97); }
+  .shop-tag small{ display:block; font-weight:400; font-size:0.82rem; opacity:0.75; }
+
+  .notice{
+    margin-top: 30px;
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+
+  .section-title{
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 32px;
+  }
+  .section-sub{
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+  }
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 18px;
+  }
+
+  .item-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display:flex; flex-direction:column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .item-card:hover{ transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
+  .item-thumb{
+    aspect-ratio: 1 / 1;
+    background: var(--panel-soft);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--ink-faint);
+    font-size: 0.76rem;
+    text-align:center;
+    padding: 10px;
+    border-bottom: 1px solid var(--line);
+    transition: opacity 0.2s ease;
+  }
+  .item-thumb:hover{ opacity: 0.75; }
+  .item-body{ padding: 22px 16px 18px; }
+  .item-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .item-name{
+    font-weight: 700;
+    font-size: 0.94rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .item-desc{
+    font-size: 0.79rem;
+    color: var(--ink-soft);
+    margin: 0 0 10px;
+    line-height: 1.5;
+  }
+  .item-category{
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .hashtag-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+    margin-bottom: 0;
+  }
+  .hashtag{
+    font-family: 'Pretendard', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: var(--panel-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .hashtag:hover{ background: var(--ink); color: #fff; border-color: var(--ink); }
+  .empty-msg{
+    color: var(--ink-faint);
+    font-size: 0.86rem;
+    grid-column: 1 / -1;
+  }
+  .item-link{
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1px;
+  }
+
+  #page-notice .section-title{ margin-bottom: 56px; }
+
+  .notice-block{ margin-bottom: 76px; text-align: center; }
+  .notice-heading{
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .feature-chips{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .feature-chip{
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--panel-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 11px 22px;
+  }
+  .flow-steps{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+  }
+  .flow-step{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    white-space: nowrap;
+  }
+  .flow-arrow{ color: var(--ink-faint); font-size: 1.05rem; }
+  .flow-note{
+    margin-top: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--panel-soft);
+    border: 1px solid var(--line);
+    padding: 14px 24px;
+    border-radius: 10px;
+  }
+  .flow-note .star{ font-size: 1.15rem; color: var(--ink-faint); }
+  .caution-list{
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .caution-list li{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    text-align: left;
+  }
+  .caution-list li::before{
+    content: "-";
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+
+  .portfolio-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 700px){
+    .portfolio-grid{ grid-template-columns: 1fr; }
+  }
+  .portfolio-card{
+    position: relative;
+    aspect-ratio: 1/1;
+    background: var(--panel-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  #grid-portfolio3d .portfolio-card{ aspect-ratio: 4/3; }
+  #grid-portfolio3d.portfolio-grid{ grid-template-columns: 1fr; }
+  @media (min-width: 701px){
+    #grid-portfolio3d.portfolio-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .portfolio-card:hover{ transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
+  .portfolio-overlay{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.62);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 22px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    text-align: left;
+  }
+  .portfolio-card:hover .portfolio-overlay{ opacity: 1; }
+  .play-badge{
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    padding-left: 2px;
+  }
+  .portfolio-overlay .portfolio-title{
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+  .portfolio-overlay .portfolio-desc{
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  /* ---- lightbox ---- */
+  .lightbox{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .lightbox.open{ display: flex; }
+  .lightbox-stage{
+    width: min(70vw, 620px);
+    aspect-ratio: 1/1;
+    background: #2a2a2a;
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+    text-align: center;
+    overflow: hidden;
+  }
+  .lightbox-stage.is-video{
+    width: min(80vw, 860px);
+    aspect-ratio: 16/9;
+  }
+  .lightbox-caption{
+    width: min(70vw, 620px);
+    margin-top: 20px;
+    color: #fff;
+  }
+  .lightbox-caption.is-video{
+    width: min(80vw, 860px);
+  }
+  .lightbox-caption .portfolio-title{
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+  }
+  .lightbox-caption .portfolio-desc{
+    color: rgba(255,255,255,0.75);
+  }
+  .lightbox-close{
+    position: absolute;
+    top: 24px; right: 28px;
+    z-index: 2;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .lightbox-nav{
+    position: absolute;
+    top: 0; bottom: 0;
+    z-index: 1;
+    width: 90px;
+    display: flex; align-items: center;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 2.2rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .lightbox-nav:hover{ color: #fff; }
+  .lightbox-prev{ left: 0; justify-content: flex-start; padding-left: 20px; }
+  .lightbox-next{ right: 0; justify-content: flex-end; padding-right: 20px; }
+
+  .notice-modal{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .notice-modal.open{ display: flex; }
+  .notice-modal-box{
+    background: #fff;
+    border-radius: var(--radius);
+    max-width: 660px;
+    width: 100%;
+    padding: 48px 44px 38px;
+  }
+  .notice-modal-title{
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin-bottom: 34px;
+    text-align: center;
+  }
+  .notice-modal-list{
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .notice-modal-list li{
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    padding-left: 18px;
+    position: relative;
+  }
+  .notice-modal-list li::before{
+    content: "·";
+    position: absolute;
+    left: 0;
+    color: var(--ink-faint);
+  }
+  .notice-modal-list li strong{
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .notice-modal-confirm{
+    width: 100%;
+    padding: 17px;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .notice-modal-confirm:hover{ background: var(--accent-deep, #333); }
+
+  .status-badge{
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .status-green{ background: #e6f4ea; color: #2e7d46; }
+  .status-blue{ background: #e8f0fe; color: #1a56db; }
+  .status-purple{ background: #f3e8fd; color: #7c3aed; }
+  .status-orange{ background: #fef3e2; color: #c2600a; }
+  .status-gray{ background: #f0f0f0; color: #6b6b6b; }
+
+  footer{
+    margin-top: 60px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+  }
+
+  .menu-toggle{ display:none; }
+
+  @media (max-width: 860px){
+    .app{ grid-template-columns: 1fr; }
+    .sidebar{
+      position: relative; height: auto;
+      display: none;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar.open{ display:block; }
+    .menu-toggle{
+      display:flex; align-items:center; gap:16px;
+      position: sticky; top:0; z-index: 5;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 20px;
+      font-weight:700;
+      font-size: 1.15rem;
+      cursor:pointer;
+    }
+    .menu-toggle .menu-icon{ font-size: 1.5rem; line-height: 1; }
+    main{ padding: 28px 20px 60px; }
+    .gif-frame{ margin-top: -48px; height: 42vh; min-height: 220px; }
+    .greeting{ font-size: 1.5rem; }
+    .lightbox-stage{ width: 84vw; }
+    .lightbox-caption{ width: 84vw; }
+    .lightbox-nav{ width: 56px; font-size: 1.7rem; }
+    .lightbox-prev{ padding-left: 8px; }
+    .lightbox-next{ padding-right: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="menu-toggle" id="menuToggle"><span class="menu-icon">☰</span>MARO Commission</div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-name">MARO Commission</div>
+      <div class="brand-tag">VIRTUAL AVATAR CREATOR</div>
+    </div>
+
+    <nav>
+      <div class="nav-group">
+        <button class="simple-btn active" data-page="main">Main Page</button>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-group">
+        <button class="simple-btn" data-page="portfolio3d">3D Portfolio</button>
+      </div>
+      <div class="nav-group">
+        <button class="simple-btn" data-page="portfolio2d">Live 2D Portfolio</button>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-group">
+        <button class="simple-btn" data-page="notice">Notice</button>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-group">
+        <button class="tag-btn" id="boothToggle">Booth Asset<span class="chev">▸</span></button>
+        <div class="subnav" id="boothSub">
+          <button class="subhead" data-page="group-all">All</button>
+          <button class="subhead" data-page="group-character">Character</button>
+
+          <button class="subhead" data-page="group-hair">Hair</button>
+          <button class="leaf-btn" data-page="hair-long">Long Hair</button>
+          <button class="leaf-btn" data-page="hair-short">Short hair</button>
+          <button class="leaf-btn" data-page="hair-pony">Ponytail</button>
+          <button class="leaf-btn" data-page="hair-twin">Twintail</button>
+          <button class="leaf-btn" data-page="hair-etc">Etc</button>
+
+          <button class="subhead" data-page="group-clothes">Clothes</button>
+          <button class="leaf-btn" data-page="cloth-daily">Daily</button>
+          <button class="leaf-btn" data-page="cloth-lovely">Lovely</button>
+          <button class="leaf-btn" data-page="cloth-modern">Modern / Chic</button>
+          <button class="leaf-btn" data-page="cloth-etc">Etc</button>
+
+          <button class="subhead" data-page="group-acc">Acc</button>
+          <button class="leaf-btn" data-page="acc-lens">Lens</button>
+          <button class="leaf-btn" data-page="acc-hair">Hair acc</button>
+          <button class="leaf-btn" data-page="acc-nail">Nail</button>
+          <button class="leaf-btn" data-page="acc-etc">Etc</button>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <main>
+
+    <div class="content-search" id="contentSearch">
+      <input type="search" id="searchInput" placeholder="에셋 검색 (이름, 아바타명)" autocomplete="off">
+    </div>
+
+    <section class="page active" id="page-main">
+      <div class="hero-card">
+        <div class="gif-frame" id="gifFrame">
+          <div class="slide-stack" id="slideStack"></div>
+          <div class="gif-placeholder" id="gifPlaceholder"></div>
+        </div>
+
+        <div class="eyebrow" style="text-align:center;">Welcome</div>
+        <h1 class="greeting">안녕하세요! 버츄얼 아바타 제작자 마로입니다.</h1>
+        <p class="hero-desc">
+          3D Avatar / Live2D Rigging<br>
+          정성을 담아 꼼꼼하게 제작해 드립니다<br>
+          현재 아트머그와 멜로밍에서 아바타 커미션을 수주하고 있습니다.
+        </p>
+
+        <div class="link-row">
+          <a class="shop-tag" href="https://artmug.kr/index.php?channel=view&uid=59565" target="_blank" rel="noopener">
+            <span>아트머그<br><small>ARTMUG SHOP</small></span>
+          </a>
+          <a class="shop-tag" href="https://commission.meloming.com/products/54aa7aa0-993c-4ed5-9ffc-c33c0a53377e" target="_blank" rel="noopener">
+            <span>멜로밍<br><small>MELLOMING SHOP</small></span>
+          </a>
+          <div class="shop-tag" id="discordTag" title="클릭하면 아이디가 복사돼요" style="cursor:pointer;">
+            <span>디스코드<br><small id="discordLabel">@maromarovmaro</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-hair-long">
+      <div class="eyebrow">Booth Asset · Hair</div>
+      <h2 class="section-title">Long Hair</h2>
+      <div class="grid" id="grid-hair-long"></div>
+    </section>
+
+    <section class="page" id="page-hair-short">
+      <div class="eyebrow">Booth Asset · Hair</div>
+      <h2 class="section-title">Short Hair</h2>
+      <div class="grid" id="grid-hair-short"></div>
+    </section>
+
+    <section class="page" id="page-hair-pony">
+      <div class="eyebrow">Booth Asset · Hair</div>
+      <h2 class="section-title">Ponytail</h2>
+      <div class="grid" id="grid-hair-pony"></div>
+    </section>
+
+    <section class="page" id="page-hair-twin">
+      <div class="eyebrow">Booth Asset · Hair</div>
+      <h2 class="section-title">Twintail</h2>
+      <div class="grid" id="grid-hair-twin"></div>
+    </section>
+
+    <section class="page" id="page-hair-etc">
+      <div class="eyebrow">Booth Asset · Hair</div>
+      <h2 class="section-title">Etc</h2>
+      <div class="grid" id="grid-hair-etc"></div>
+    </section>
+
+    <section class="page" id="page-cloth-daily">
+      <div class="eyebrow">Booth Asset · Clothes</div>
+      <h2 class="section-title">Daily</h2>
+      <div class="grid" id="grid-cloth-daily"></div>
+    </section>
+
+    <section class="page" id="page-cloth-lovely">
+      <div class="eyebrow">Booth Asset · Clothes</div>
+      <h2 class="section-title">Lovely</h2>
+      <div class="grid" id="grid-cloth-lovely"></div>
+    </section>
+
+    <section class="page" id="page-cloth-modern">
+      <div class="eyebrow">Booth Asset · Clothes</div>
+      <h2 class="section-title">Modern / Chic</h2>
+      <div class="grid" id="grid-cloth-modern"></div>
+    </section>
+
+    <section class="page" id="page-cloth-etc">
+      <div class="eyebrow">Booth Asset · Clothes</div>
+      <h2 class="section-title">Etc</h2>
+      <div class="grid" id="grid-cloth-etc"></div>
+    </section>
+
+    <section class="page" id="page-acc-hair">
+      <div class="eyebrow">Booth Asset · Acc</div>
+      <h2 class="section-title">Hair Acc</h2>
+      <div class="grid" id="grid-acc-hair"></div>
+    </section>
+
+    <section class="page" id="page-acc-nail">
+      <div class="eyebrow">Booth Asset · Acc</div>
+      <h2 class="section-title">Nail</h2>
+      <div class="grid" id="grid-acc-nail"></div>
+    </section>
+
+    <section class="page" id="page-acc-lens">
+      <div class="eyebrow">Booth Asset · Acc</div>
+      <h2 class="section-title">Lens</h2>
+      <div class="grid" id="grid-acc-lens"></div>
+    </section>
+
+    <section class="page" id="page-acc-etc">
+      <div class="eyebrow">Booth Asset · Acc</div>
+      <h2 class="section-title">Etc</h2>
+      <div class="grid" id="grid-acc-etc"></div>
+    </section>
+
+    <section class="page" id="page-portfolio3d">
+      <div class="eyebrow">Portfolio</div>
+      <h2 class="section-title">3D Portfolio</h2>
+      <div class="portfolio-grid" id="grid-portfolio3d"></div>
+    </section>
+
+    <section class="page" id="page-portfolio2d">
+      <div class="eyebrow">Portfolio</div>
+      <h2 class="section-title">Live 2D Portfolio</h2>
+      <div class="portfolio-grid" id="grid-portfolio2d"></div>
+    </section>
+
+    <section class="page" id="page-notice">
+      <div class="eyebrow">Info</div>
+      <h2 class="section-title">Notice</h2>
+
+      <div class="notice-block">
+        <div class="notice-heading">기본 제공 옵션</div>
+        <div class="feature-chips">
+          <span class="feature-chip">블렌더 성형</span>
+          <span class="feature-chip">52 ARKit 페이셜</span>
+          <span class="feature-chip">표정 4종 (하트, 반짝, 눈물, 홍조)</span>
+          <span class="feature-chip">뽀잉눈 / 웃는눈</span>
+          <span class="feature-chip">전용 의상 1종</span>
+          <span class="feature-chip">전용 헤어 1종</span>
+          <span class="feature-chip">앞머리 페이크쉐도우</span>
+          <span class="feature-chip">매지카클로스2</span>
+          <span class="feature-chip">유니티 파일</span>
+          <span class="feature-chip">와루도 파일</span>
+        </div>
+      </div>
+
+      <div class="notice-block">
+        <div class="notice-heading">작업 순서</div>
+        <div class="flow-steps">
+          <span class="flow-step">문의/상담</span><span class="flow-arrow">→</span>
+          <span class="flow-step">결제</span><span class="flow-arrow">→</span>
+          <span class="flow-step">기본 성형</span><span class="flow-arrow">→</span>
+          <span class="flow-step">성형 컨펌 후 수정</span><span class="flow-arrow">→</span>
+          <span class="flow-step">페이셜</span><span class="flow-arrow">→</span>
+          <span class="flow-step">페이셜 컨펌 후 수정</span><span class="flow-arrow">→</span>
+          <span class="flow-step">뚜따</span><span class="flow-arrow">→</span>
+          <span class="flow-step">뚜따 컨펌 후 수정</span><span class="flow-arrow">→</span>
+          <span class="flow-step">매지카클로스</span><span class="flow-arrow">→</span>
+          <span class="flow-step">완성</span>
+        </div>
+        <div class="flow-note"><span class="star">✮</span><span id="flowNoteText">페이셜 이후부턴 성형 및 페이셜 수정이 어렵습니다</span></div>
+      </div>
+
+      <div class="notice-block">
+        <div class="notice-heading">주의사항</div>
+        <ul class="caution-list">
+          <li>본 항목을 읽지 않아 생기는 불이익에 대해서 책임지지 않습니다</li>
+          <li>상업적 허가가 필요한 에셋의 경우 의뢰자분이 사용 허가를 받으셔야 합니다</li>
+          <li>booth 에셋은 양측구매를 원칙으로 하며, 작가 미보유 에셋일 경우 기프트로 전달해 주셔야 합니다</li>
+          <li>파일 보관 기간은 완료일 기준 30일이며, 기간이 지나면 삭제됩니다</li>
+          <li>작업물은 포트폴리오에 사용될 수 있습니다</li>
+          <li>작업은 입금순으로 진행됩니다</li>
+          <li>VRM, 멜리고는 받지 않고 있습니다</li>
+          <li>유니티 패키지는 매지카클로스 제거 후 전달드립니다 (매지카2 보유 시 미리 말씀 주시면 원본 전달 가능합니다)</li>
+          <li>에셋 및 기프트 비용은 작업 비용과 별도이며, 어떠한 이유로든 환불이 불가능하니 신중하게 결정해주세요</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="page" id="page-group-all">
+      <div class="eyebrow">Booth Asset</div>
+      <h2 class="section-title">All</h2>
+      <div class="grid" id="grid-group-all"></div>
+    </section>
+
+    <section class="page" id="page-group-hair">
+      <div class="eyebrow">Booth Asset</div>
+      <h2 class="section-title">Hair</h2>
+      <div class="grid" id="grid-group-hair"></div>
+    </section>
+
+    <section class="page" id="page-group-clothes">
+      <div class="eyebrow">Booth Asset</div>
+      <h2 class="section-title">Clothes</h2>
+      <div class="grid" id="grid-group-clothes"></div>
+    </section>
+
+    <section class="page" id="page-group-acc">
+      <div class="eyebrow">Booth Asset</div>
+      <h2 class="section-title">Acc</h2>
+      <div class="grid" id="grid-group-acc"></div>
+    </section>
+
+    <section class="page" id="page-group-character">
+      <div class="eyebrow">Booth Asset</div>
+      <h2 class="section-title">Character</h2>
+      <div class="grid" id="grid-group-character"></div>
+    </section>
+
+    <section class="page" id="page-char-시나노">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">시나노</h2>
+      <div class="grid" id="grid-char-시나노"></div>
+    </section>
+
+    <section class="page" id="page-char-마누카">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">마누카</h2>
+      <div class="grid" id="grid-char-마누카"></div>
+    </section>
+
+    <section class="page" id="page-char-마요">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">마요</h2>
+      <div class="grid" id="grid-char-마요"></div>
+    </section>
+
+    <section class="page" id="page-char-밀티나">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">밀티나</h2>
+      <div class="grid" id="grid-char-밀티나"></div>
+    </section>
+
+    <section class="page" id="page-char-에쿠">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">에쿠</h2>
+      <div class="grid" id="grid-char-에쿠"></div>
+    </section>
+
+    <section class="page" id="page-char-밀피">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">밀피</h2>
+      <div class="grid" id="grid-char-밀피"></div>
+    </section>
+
+    <section class="page" id="page-char-아이리">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">아이리</h2>
+      <div class="grid" id="grid-char-아이리"></div>
+    </section>
+
+    <section class="page" id="page-char-모에">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">모에</h2>
+      <div class="grid" id="grid-char-모에"></div>
+    </section>
+
+    <section class="page" id="page-char-시오">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">시오</h2>
+      <div class="grid" id="grid-char-시오"></div>
+    </section>
+
+    <section class="page" id="page-char-키쿄우">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">키쿄우</h2>
+      <div class="grid" id="grid-char-키쿄우"></div>
+    </section>
+
+    <section class="page" id="page-char-마야">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">마야</h2>
+      <div class="grid" id="grid-char-마야"></div>
+    </section>
+
+    <section class="page" id="page-char-마오">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">마오</h2>
+      <div class="grid" id="grid-char-마오"></div>
+    </section>
+
+    <section class="page" id="page-char-루루네">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">루루네</h2>
+      <div class="grid" id="grid-char-루루네"></div>
+    </section>
+
+    <section class="page" id="page-char-루미나">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">루미나</h2>
+      <div class="grid" id="grid-char-루미나"></div>
+    </section>
+
+    <section class="page" id="page-char-Other">
+      <div class="eyebrow">Booth Asset · Character</div>
+      <h2 class="section-title">Other</h2>
+      <div class="grid" id="grid-char-Other"></div>
+    </section>
+
+    <section class="page" id="page-search">
+      <div class="eyebrow">Search</div>
+      <h2 class="section-title">검색 결과</h2>
+      <div class="grid" id="grid-search"></div>
+    </section>
+
+    <footer>© MARO Commission — Virtual Avatar Creator. All rights reserved.</footer>
+  </main>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="닫기">&times;</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="이전">&#8249;</button>
+  <div class="lightbox-stage" id="lightboxStage">이미지 준비중<br>(썸네일 추가)</div>
+  <div class="lightbox-caption" id="lightboxCaption">
+    <div class="portfolio-title" id="lightboxTitle"></div>
+    <div class="portfolio-desc" id="lightboxDesc"></div>
+  </div>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="다음">&#8250;</button>
+</div>
+
+<div class="notice-modal" id="boothNoticeModal">
+  <div class="notice-modal-box">
+    <div class="notice-modal-title">안내사항</div>
+    <ul class="notice-modal-list">
+      <li><strong>모든 아바타는 의뢰자님께서 사용 규약을 한번 더 확인해 주셔야 합니다!</strong></li>
+      <li><strong>ALL이라 적혀 있어도 에셋마다 사용 가능한 아바타가 다릅니다, 셀렉시 참고 부탁드립니다!</strong></li>
+      <li>하단의 아바타 이름 클릭시 아바타별로 보유중인 에셋을 한꺼번에 확인 가능합니다</li>
+      <li>우측 상단의 검색 기능을 활용하셔도 됩니다!</li>
+      <li>이미지 클릭시 부스 링크로 넘어갑니다!</li>
+    </ul>
+    <button class="notice-modal-confirm" id="boothNoticeConfirm">확인했습니다</button>
+  </div>
+</div>
+
+<script>
+  const CATEGORIES = [
+    "hair-long","hair-short","hair-pony","hair-twin","hair-etc",
+    "cloth-easy","cloth-daily","cloth-lovely","cloth-modern","cloth-etc",
+    "acc-hair","acc-nail","acc-lens","acc-etc",
+    "character-item"
+  ];
+
+  const CATEGORY_LABEL = {
+    "hair-long":"Long Hair", "hair-short":"Short hair", "hair-pony":"Ponytail", "hair-twin":"Twintail", "hair-etc":"Etc",
+    "cloth-easy":"Easy Wear", "cloth-daily":"Daily", "cloth-lovely":"Lovely", "cloth-modern":"Modern / Chic", "cloth-etc":"Etc",
+    "acc-hair":"Hair acc", "acc-nail":"Nail", "acc-lens":"Lens", "acc-etc":"Etc",
+    "character-item":"캐릭터"
+  };
+
+  const CHARACTERS = ["시나노","마누카","마요","밀티나","에쿠","밀피","아이리","모에","시오","키쿄우","마야","마오","루루네","루미나","Other"];
+
+  const STATUSES = [
+    { label: '방송 사용 가능', cls: 'status-green' },
+    { label: '샵 문의 필요', cls: 'status-blue' },
+    { label: '구글 폼 접수 필요', cls: 'status-purple' },
+    { label: '라이선스 구매 필요', cls: 'status-orange' },
+    { label: '샵 미기재', cls: 'status-gray' }
+  ];
+
+  // =========================================================================
+  // 구글 시트 연동 설정
+  // -------------------------------------------------------------------------
+  // 아래 3개 URL을 본인의 구글 시트 "웹에 게시" CSV 링크로 바꿔주세요.
+  // (파일 > 공유 > 웹에 게시 > 게시할 시트 선택 > 형식: 쉼표로 구분된 값(.csv))
+  //
+  // ASSETS 시트 열 구성 (첫 줄은 헤더, 그대로 이름 사용):
+  //   name | category | tags | status | link | image_url | desc
+  //   - category: hair-long / hair-short / hair-pony / hair-twin / hair-etc /
+  //               cloth-easy / cloth-daily / cloth-lovely / cloth-modern / cloth-etc /
+  //               acc-hair / acc-nail / acc-lens / acc-etc / character-item  중 하나
+  //               (character-item = 헤어/의상/액세서리가 아닌 캐릭터(아바타 본체) 자체 상품)
+  //   - tags: 캐릭터 이름을 콤마(,)로 구분 (예: 마누카,밀피)
+  //   - status: 방송 사용 가능 / 샵 문의 필요 / 구글 폼 접수 필요 / 라이선스 구매 필요 (없으면 빈 칸)
+  //   - image_url: 이미지 주소 (없으면 빈 칸 — 플레이스홀더로 표시됨)
+  //
+  // PORTFOLIO 시트 열 구성:
+  //   title | desc | media
+  //   - media: 이미지 주소와 유튜브 링크를 콤마(,)로 여러 개 넣을 수 있어요.
+  //            클릭했을 때 넣은 순서대로 넘겨볼 수 있어요.
+  //            예: https://.../사진1.jpg,https://www.youtube.com/watch?v=xxxxxxxxxxx
+  //
+  // SITE 시트 열 구성 (key/value 형식, 메인 페이지 이미지 등 전역 설정용):
+  //   key | value
+  //   - slide_images | https://.../1.png,https://.../2.png,https://.../3.png
+  //     (3~4장 정도의 PNG 주소를 콤마(,)로 나열하면, 메인 페이지에서
+  //      일정 간격으로 자연스럽게 페이드인/아웃 되며 넘어가요)
+  //   - gif_url | https://.../인사모션.gif
+  //     (slide_images가 없을 때 대신 쓰는 단일 이미지/GIF, 둘 다 넣으면 slide_images 우선)
+  // =========================================================================
+  const SHEET_URLS = {
+    assets: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvK8Aj5lggTutRpNmvmLnrSbJITAPiOIS3ImbuJKy-K8UIeu1Qi-LY0HQfKsO2NGHWSrYPgeTsTNt0/pub?gid=0&single=true&output=csv',
+    portfolio3d: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvK8Aj5lggTutRpNmvmLnrSbJITAPiOIS3ImbuJKy-K8UIeu1Qi-LY0HQfKsO2NGHWSrYPgeTsTNt0/pub?gid=42561723&single=true&output=csv',
+    portfolio2d: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvK8Aj5lggTutRpNmvmLnrSbJITAPiOIS3ImbuJKy-K8UIeu1Qi-LY0HQfKsO2NGHWSrYPgeTsTNt0/pub?gid=1013584327&single=true&output=csv',
+    site: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvK8Aj5lggTutRpNmvmLnrSbJITAPiOIS3ImbuJKy-K8UIeu1Qi-LY0HQfKsO2NGHWSrYPgeTsTNt0/pub?gid=2006081924&single=true&output=csv'
+  };
+
+  function isConfigured(url){
+    return !!url && !url.startsWith('PASTE_YOUR_');
+  }
+
+  // ---- 간단한 CSV 파서 (따옴표로 감싼 콤마도 처리) ----
+  function parseCSV(text){
+    const rows = [];
+    let i = 0, field = '', row = [], inQuotes = false;
+    const len = text.length;
+    while(i < len){
+      const char = text[i];
+      if(inQuotes){
+        if(char === '"'){
+          if(text[i+1] === '"'){ field += '"'; i += 2; continue; }
+          inQuotes = false; i++; continue;
+        }
+        field += char; i++; continue;
+      }
+      if(char === '"'){ inQuotes = true; i++; continue; }
+      if(char === ','){ row.push(field); field = ''; i++; continue; }
+      if(char === '\r'){ i++; continue; }
+      if(char === '\n'){ row.push(field); rows.push(row); row = []; field = ''; i++; continue; }
+      field += char; i++;
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function csvToObjects(text){
+    const rows = parseCSV(text).filter(r => r.length && r.some(c => c.trim() !== ''));
+    if(!rows.length) return [];
+    const headers = rows[0].map(h => h.trim());
+    return rows.slice(1).map(r => {
+      const obj = {};
+      headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
+      return obj;
+    });
+  }
+
+  async function fetchCSVRows(url){
+    const cacheBustedUrl = url + (url.includes('?') ? '&' : '?') + '_ts=' + Date.now();
+    const res = await fetch(cacheBustedUrl, { cache: 'no-store' });
+    if(!res.ok) throw new Error('시트를 불러오지 못했습니다: ' + res.status);
+    const text = await res.text();
+    return csvToObjects(text);
+  }
+
+  function buildItemsFromRows(rows){
+    return rows
+      .filter(r => CATEGORIES.includes((r.category || '').trim()))
+      .map((r, idx) => {
+        const tags = (r.tags || '').split(/[,|]/).map(t => t.trim()).filter(Boolean);
+        const status = STATUSES.find(s => s.label === (r.status || '').trim()) || null;
+        return {
+          id: 'item-' + (idx + 1),
+          name: r.name || '이름 없음',
+          category: r.category.trim(),
+          tags: tags,
+          status: status,
+          desc: r.desc || '',
+          link: r.link || '#',
+          image: r.image_url || ''
+        };
+      });
+  }
+
+  function buildPortfolioFromRows(rows){
+    return rows.map(r => ({
+      title: r.title || '',
+      desc: r.desc || '',
+      media: parseMediaList(r.media || r.image_url || '')
+    }));
+  }
+
+  // ---- 이미지/유튜브 링크를 섞어서 넣을 수 있는 미디어 파서 ----
+  function extractYouTubeId(url){
+    const patterns = [
+      /youtu\.be\/([a-zA-Z0-9_-]{6,})/,
+      /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{6,})/,
+      /youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/
+    ];
+    for(const p of patterns){
+      const m = url.match(p);
+      if(m) return m[1];
+    }
+    return null;
+  }
+
+  function parseMediaList(raw){
+    return (raw || '')
+      .split(/[\n,]/)
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(url => {
+        const videoId = extractYouTubeId(url);
+        return videoId ? { type: 'youtube', url, videoId } : { type: 'image', url };
+      });
+  }
+
+  // ---- placeholder demo data (구글 시트 연결 전까지 보여줄 예시 데이터) ----
+  function generateDemoItems(){
+    const items = [];
+    let uid = 1;
+    CATEGORIES.forEach(cat => {
+      for(let i=1; i<=3; i++){
+        const tag1 = CHARACTERS[uid % CHARACTERS.length];
+        const tag2 = CHARACTERS[(uid + 4) % CHARACTERS.length];
+        const status = STATUSES[uid % STATUSES.length];
+        items.push({
+          id: 'item-' + uid,
+          name: '상품명 ' + i,
+          category: cat,
+          tags: [tag1, tag2],
+          status: status,
+          desc: '',
+          link: '#',
+          image: ''
+        });
+        uid++;
+      }
+    });
+    return items;
+  }
+
+  function generateDemoPortfolio(){
+    const list = [];
+    for(let i=1; i<=4; i++){
+      // media: 이미지/유튜브 링크를 섞어서 배열로 넣으면, 클릭했을 때 순서대로 넘겨볼 수 있어요.
+      // 예: media: ['https://.../사진1.jpg', 'https://www.youtube.com/watch?v=xxxxxxxxxxx']
+      list.push({ title: '작업물 제목 ' + i, desc: '작업물에 대한 간단한 설명이 들어갈 자리입니다.', media: [] });
+    }
+    return list;
+  }
+
+  let ITEMS = generateDemoItems();
+  const PORTFOLIO_DATA = {
+    portfolio3d: generateDemoPortfolio(),
+    portfolio2d: generateDemoPortfolio()
+  };
+
+  function renderItemCard(item, opts){
+    opts = opts || {};
+    const showCategory = !!opts.showCategory;
+    const showBadge = opts.showBadge !== false;
+    const tagsHtml = item.tags.map(t => `<button type="button" class="hashtag" data-char="${t}">${t}</button>`).join('');
+    const categoryHtml = showCategory ? `<div class="item-category">${CATEGORY_LABEL[item.category] || item.category}</div>` : '';
+    const badgeHtml = (showBadge && item.status) ? `<span class="status-badge ${item.status.cls}">${item.status.label}</span>` : '';
+    const descHtml = item.desc ? `<div class="item-desc">${item.desc}</div>` : '';
+    const thumbInner = item.image
+      ? `<img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;">`
+      : '이미지 준비중<br>(썸네일 추가)';
+    return `<div class="item-card">
+        <a class="item-thumb" href="${item.link}" target="_blank" rel="noopener">${thumbInner}</a>
+        <div class="item-body">
+          ${categoryHtml}
+          <div class="item-head">
+            <div class="item-name" title="${item.name}">${item.name}</div>
+            ${badgeHtml}
+          </div>
+          ${descHtml}
+          <div class="hashtag-row">${tagsHtml}</div>
+        </div>
+      </div>`;
+  }
+
+  // render category grids
+  function renderAssetGrids(){
+    CATEGORIES.forEach(cat => {
+      const grid = document.getElementById('grid-' + cat);
+      if(!grid) return;
+      grid.innerHTML = ITEMS.filter(it => it.category === cat).map(it => renderItemCard(it, { showCategory: false, showBadge: true })).join('');
+    });
+
+    // render character (hashtag) grids — 캐릭터 카테고리 상품만 표시 (헤어/의상 등 다른 카테고리 제외)
+    CHARACTERS.forEach(ch => {
+      const grid = document.getElementById('grid-char-' + ch);
+      if(!grid) return;
+      const items = ITEMS.filter(it => it.category === 'character-item' && it.tags.includes(ch));
+      grid.innerHTML = items.length
+        ? items.map(it => renderItemCard(it, { showCategory: false, showBadge: false })).join('')
+        : '<p class="empty-msg">아직 이 해시태그로 등록된 에셋이 없습니다.</p>';
+    });
+
+    // render aggregate group pages (subhead click -> see everything in that group)
+    const GROUPS = {
+      'group-all': it => true,
+      'group-hair': it => it.category.startsWith('hair-'),
+      'group-clothes': it => it.category.startsWith('cloth-'),
+      'group-acc': it => it.category.startsWith('acc-'),
+      'group-character': it => it.category === 'character-item'
+    };
+    Object.keys(GROUPS).forEach(gid => {
+      const grid = document.getElementById('grid-' + gid);
+      if(!grid) return;
+      const items = ITEMS.filter(GROUPS[gid]);
+      const cardOpts = gid === 'group-character'
+        ? { showCategory: false, showBadge: false }
+        : { showCategory: true, showBadge: true };
+      grid.innerHTML = items.length
+        ? items.map(it => renderItemCard(it, cardOpts)).join('')
+        : '<p class="empty-msg">등록된 에셋이 없습니다.</p>';
+    });
+  }
+
+  function renderPortfolioGrids(){
+    ["portfolio3d","portfolio2d"].forEach(cat => {
+      const grid = document.getElementById('grid-' + cat);
+      if(!grid) return;
+      grid.innerHTML = '';
+      PORTFOLIO_DATA[cat].forEach((item, itemIdx) => {
+        const card = document.createElement('div');
+        card.className = 'portfolio-card';
+        const cover = (item.media && item.media[0]) || null;
+        let inner;
+        if(!cover){
+          inner = '이미지 준비중<br>(썸네일 추가)';
+        } else if(cover.type === 'youtube'){
+          inner = `<img src="https://img.youtube.com/vi/${cover.videoId}/hqdefault.jpg" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;"><span class="play-badge">▶</span>`;
+        } else {
+          inner = `<img src="${cover.url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;">`;
+        }
+        card.innerHTML = `${inner}
+          <div class="portfolio-overlay">
+            <div class="portfolio-title">${item.title}</div>
+            <div class="portfolio-desc">${item.desc}</div>
+          </div>`;
+        card.addEventListener('click', () => openLightbox(cat, itemIdx));
+        grid.appendChild(card);
+      });
+    });
+  }
+
+  renderAssetGrids();
+  renderPortfolioGrids();
+
+  // ---- 구글 시트에서 실제 데이터 불러오기 (설정된 경우에만) ----
+  // 메인 페이지 이미지는 다른 시트를 기다리지 않고 곧바로, 독립적으로 불러옴
+  async function loadSiteConfig(){
+    if(!isConfigured(SHEET_URLS.site)) return;
+    try{
+      const rows = await fetchCSVRows(SHEET_URLS.site);
+      const siteConfig = {};
+      rows.forEach(r => { if(r.key) siteConfig[r.key.trim()] = r.value || ''; });
+      const slideUrls = (siteConfig.slide_images || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+      if(slideUrls.length){
+        startHeroSlideshow(slideUrls);
+      } else if(siteConfig.gif_url){
+        startHeroSlideshow([siteConfig.gif_url]);
+      }
+    }catch(err){
+      console.warn('메인 이미지 시트를 불러오지 못했습니다:', err);
+    }
+  }
+  loadSiteConfig();
+
+  async function loadFromGoogleSheets(){
+    try{
+      if(isConfigured(SHEET_URLS.assets)){
+        const rows = await fetchCSVRows(SHEET_URLS.assets);
+        ITEMS = buildItemsFromRows(rows);
+      }
+      if(isConfigured(SHEET_URLS.portfolio3d)){
+        const rows = await fetchCSVRows(SHEET_URLS.portfolio3d);
+        PORTFOLIO_DATA.portfolio3d = buildPortfolioFromRows(rows);
+      }
+      if(isConfigured(SHEET_URLS.portfolio2d)){
+        const rows = await fetchCSVRows(SHEET_URLS.portfolio2d);
+        PORTFOLIO_DATA.portfolio2d = buildPortfolioFromRows(rows);
+      }
+      renderAssetGrids();
+      renderPortfolioGrids();
+    }catch(err){
+      console.warn('구글 시트를 불러오지 못해 예시 데이터로 표시합니다:', err);
+    }
+  }
+  loadFromGoogleSheets();
+
+  // ---- lightbox ----
+  const lightbox = document.getElementById('lightbox');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxDesc = document.getElementById('lightboxDesc');
+  const lightboxStage = document.getElementById('lightboxStage');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  let lightboxCat = null;
+  let lightboxIndex = 0;
+
+  // 카테고리 안의 모든 작업물 media를 하나의 순서로 펼침 (작업물마다 media가 없으면 자리 하나는 유지)
+  function buildFlatMediaList(cat){
+    const flat = [];
+    PORTFOLIO_DATA[cat].forEach((item, itemIdx) => {
+      if(item.media && item.media.length){
+        item.media.forEach((m, mediaIdx) => flat.push({ item, itemIdx, mediaIdx, media: m }));
+      } else {
+        flat.push({ item, itemIdx, mediaIdx: 0, media: null });
+      }
+    });
+    return flat;
+  }
+
+  function renderLightbox(){
+    const flat = buildFlatMediaList(lightboxCat);
+    const entry = flat[lightboxIndex];
+    if(!entry) return;
+    lightboxTitle.textContent = entry.item.title;
+    lightboxDesc.textContent = entry.item.desc;
+
+    lightboxStage.classList.remove('is-video');
+    lightboxCaption.classList.remove('is-video');
+    if(!entry.media){
+      lightboxStage.innerHTML = '이미지 준비중<br>(썸네일 추가)';
+    } else if(entry.media.type === 'youtube'){
+      lightboxStage.classList.add('is-video');
+      lightboxCaption.classList.add('is-video');
+      lightboxStage.innerHTML = `<iframe src="https://www.youtube.com/embed/${entry.media.videoId}?autoplay=1" title="${entry.item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;"></iframe>`;
+    } else {
+      lightboxStage.innerHTML = `<img src="${entry.media.url}" alt="${entry.item.title}" style="width:100%;height:100%;object-fit:contain;">`;
+    }
+  }
+
+  function openLightbox(cat, itemIdx){
+    lightboxCat = cat;
+    const flat = buildFlatMediaList(cat);
+    const startIdx = flat.findIndex(f => f.itemIdx === itemIdx);
+    lightboxIndex = startIdx >= 0 ? startIdx : 0;
+    renderLightbox();
+    lightbox.classList.add('open');
+  }
+
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    lightboxStage.innerHTML = '이미지 준비중<br>(썸네일 추가)';
+  }
+
+  function lightboxStep(delta){
+    const flat = buildFlatMediaList(lightboxCat);
+    lightboxIndex = (lightboxIndex + delta + flat.length) % flat.length;
+    renderLightbox();
+  }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightboxPrev').addEventListener('click', (e) => { e.stopPropagation(); lightboxStep(-1); });
+  document.getElementById('lightboxNext').addEventListener('click', (e) => { e.stopPropagation(); lightboxStep(1); });
+
+  lightbox.addEventListener('click', (e) => {
+    if(e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') lightboxStep(-1);
+    if(e.key === 'ArrowRight') lightboxStep(1);
+  });
+
+  const pages = document.querySelectorAll('.page');
+  const navButtons = document.querySelectorAll('[data-page]');
+  const contentSearch = document.getElementById('contentSearch');
+
+  function isBoothPage(id){
+    return id === 'search' ||
+      id.startsWith('group-') ||
+      id.startsWith('hair-') ||
+      id.startsWith('cloth-') ||
+      id.startsWith('acc-') ||
+      id.startsWith('char-');
+  }
+
+  function showPage(id){
+    pages.forEach(p => p.classList.toggle('active', p.id === 'page-' + id));
+    navButtons.forEach(b => b.classList.toggle('active', b.dataset.page === id));
+    if(contentSearch) contentSearch.style.display = isBoothPage(id) ? 'flex' : 'none';
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(window.innerWidth <= 860){
+      document.getElementById('sidebar').classList.remove('open');
+    }
+    if(isBoothPage(id)) maybeShowBoothNotice();
+  }
+
+  function maybeShowBoothNotice(){
+    const modal = document.getElementById('boothNoticeModal');
+    if(!modal) return;
+    if(sessionStorage.getItem('boothNoticeAck')) return;
+    modal.classList.add('open');
+  }
+
+  const boothNoticeConfirm = document.getElementById('boothNoticeConfirm');
+  if(boothNoticeConfirm){
+    boothNoticeConfirm.addEventListener('click', () => {
+      sessionStorage.setItem('boothNoticeAck', '1');
+      document.getElementById('boothNoticeModal').classList.remove('open');
+    });
+  }
+
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => showPage(btn.dataset.page));
+  });
+
+  const boothToggle = document.getElementById('boothToggle');
+  const boothSub = document.getElementById('boothSub');
+  boothToggle.addEventListener('click', () => {
+    boothToggle.classList.toggle('open');
+    boothSub.classList.toggle('open');
+  });
+  boothToggle.classList.add('open');
+  boothSub.classList.add('open');
+
+  // 메인 페이지 이미지 슬라이드쇼 (여러 장을 자연스럽게 페이드인/아웃하며 순환)
+  function startHeroSlideshow(urls){
+    const stack = document.getElementById('slideStack');
+    const placeholder = document.getElementById('gifPlaceholder');
+    if(!stack || !urls.length) return;
+    stack.innerHTML = '';
+    urls.forEach((url, i) => {
+      const img = document.createElement('img');
+      img.decoding = 'async';
+      if(i === 0){
+        img.fetchPriority = 'high';
+        img.loading = 'eager';
+      } else {
+        img.fetchPriority = 'low';
+        img.loading = 'lazy';
+      }
+      img.src = url;
+      img.alt = '';
+      img.className = 'slide-img' + (i === 0 ? ' active' : '');
+      stack.appendChild(img);
+    });
+    if(placeholder) placeholder.style.display = 'none';
+
+    if(urls.length > 1){
+      let idx = 0;
+      const imgs = stack.querySelectorAll('.slide-img');
+      setInterval(() => {
+        imgs[idx].classList.remove('active');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('active');
+      }, 3500);
+    }
+  }
+
+  // GIF가 사이드바를 제외한 콘텐츠 영역 전체 너비에 꽉 차도록 실측 기반으로 위치/너비 조정
+  function fitGifFrame(){
+    const frame = document.getElementById('gifFrame');
+    if(!frame) return;
+    if(window.innerWidth <= 860){
+      frame.style.marginLeft = '';
+      frame.style.width = '';
+      return;
+    }
+    frame.style.marginLeft = '0px';
+    frame.style.width = '';
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarWidth = sidebar ? sidebar.getBoundingClientRect().width : 0;
+    const naturalLeft = frame.getBoundingClientRect().left;
+    const shift = naturalLeft - sidebarWidth;
+    frame.style.marginLeft = (-shift) + 'px';
+    frame.style.width = (window.innerWidth - sidebarWidth) + 'px';
+  }
+  fitGifFrame();
+  window.addEventListener('resize', fitGifFrame);
+
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  function copyTextToClipboard(text){
+    if(navigator.clipboard && window.isSecureContext){
+      return navigator.clipboard.writeText(text);
+    }
+    // HTTPS가 아직 적용 안 된 환경(http)에서도 동작하는 대체 복사 방식
+    return new Promise((resolve, reject) => {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try{
+        const ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        ok ? resolve() : reject(new Error('copy failed'));
+      }catch(err){
+        document.body.removeChild(textarea);
+        reject(err);
+      }
+    });
+  }
+
+  const discordTag = document.getElementById('discordTag');
+  if(discordTag){
+    discordTag.addEventListener('click', () => {
+      const label = document.getElementById('discordLabel');
+      const original = label.textContent;
+      copyTextToClipboard('@maromarovmaro')
+        .then(() => { label.textContent = '복사됨!'; })
+        .catch(() => { label.textContent = '복사 실패, 직접 입력해주세요'; });
+      setTimeout(() => { label.textContent = original; }, 1500);
+    });
+  }
+
+  // ---- search ----
+  const searchInput = document.getElementById('searchInput');
+  const searchGrid = document.getElementById('grid-search');
+
+  function runSearch(q){
+    q = (q || '').trim();
+    if(!q){
+      searchGrid.innerHTML = '<p class="empty-msg">검색어를 입력해주세요.</p>';
+    } else {
+      const results = ITEMS.filter(it =>
+        it.name.includes(q) ||
+        it.tags.some(t => t.includes(q)) ||
+        (CATEGORY_LABEL[it.category] || '').toLowerCase().includes(q.toLowerCase())
+      );
+      searchGrid.innerHTML = results.length
+        ? results.map(it => renderItemCard(it, { showCategory: true, showBadge: true })).join('')
+        : '<p class="empty-msg">검색 결과가 없습니다.</p>';
+    }
+    showPage('search');
+  }
+
+  // 해시태그 클릭 -> ALL 기준(전체 카테고리)으로 그 태그가 붙은 에셋을 모아 보여줌
+  document.addEventListener('click', (e) => {
+    const tagBtn = e.target.closest('.hashtag');
+    if(tagBtn){
+      const ch = tagBtn.dataset.char;
+      searchInput.value = ch;
+      runSearch(ch);
+    }
+  });
+
+  searchInput.addEventListener('input', () => {
+    runSearch(searchInput.value);
+  });
+</script>
+</body>
+</html>
