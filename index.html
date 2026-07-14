@@ -757,6 +757,102 @@
     color: var(--ink-faint);
   }
 
+  /* ---------- floating action buttons ---------- */
+  .fab-stack{
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .fab-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  }
+  .fab-btn svg{ width: 20px; height: 20px; }
+  .fab-btn:hover{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.16); }
+  .fab-btn:active{ transform: translateY(0) scale(0.95); }
+
+  .fab-main.open svg{ transform: rotate(45deg); }
+  .fab-main svg{ transition: transform 0.25s ease; }
+
+  .fab-btn.fab-howto,
+  #fabTop{
+    color: var(--ink-soft);
+  }
+
+  .fab-btn.fab-howto{
+    width: auto;
+    height: auto;
+    border-radius: 999px;
+    padding: 13px 20px;
+    color: var(--ink-soft);
+    font-family: 'Pretendard', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .fab-sub-group{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .fab-sub{
+    opacity: 0;
+    transform: translateY(14px) scale(0.8);
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .fab-stack.open .fab-sub{
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .fab-stack.open .fab-sub.fab-sub-1{ transition-delay: 0.02s; }
+  .fab-stack.open .fab-sub.fab-sub-2{ transition-delay: 0.09s; }
+
+  @media (max-width: 860px){
+    .fab-stack{ right: 16px; bottom: 16px; }
+    .fab-btn{ width: 44px; height: 44px; }
+  }
+
+  /* ---------- easter egg ---------- */
+  .easter-egg{
+    position: fixed;
+    top: 0; left: 0;
+    width: 90px;
+    height: 90px;
+    z-index: 3000;
+    pointer-events: none;
+    object-fit: contain;
+    opacity: 1;
+    transition: opacity 1.2s ease;
+    animation: eggRoll 4.2s linear infinite;
+  }
+  .easter-egg.fade-out{ opacity: 0; }
+  @keyframes eggRoll{
+    0%   { transform: translate(-8vw, 58vh) rotate(0deg); }
+    22%  { transform: translate(38vw, 14vh) rotate(480deg); }
+    48%  { transform: translate(92vw, 66vh) rotate(960deg); }
+    74%  { transform: translate(24vw, 40vh) rotate(1440deg); }
+    100% { transform: translate(-8vw, 58vh) rotate(1920deg); }
+  }
+
   .menu-toggle{ display:none; }
 
   @media (max-width: 860px){
@@ -1186,6 +1282,19 @@
   </div>
 </div>
 
+<div class="fab-stack" id="fabStack">
+  <div class="fab-sub-group">
+    <button class="fab-btn fab-sub fab-sub-2" id="fabTop" aria-label="위로 가기" title="위로 가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    </button>
+    <button class="fab-btn fab-howto fab-sub fab-sub-1" id="fabHowTo" aria-label="사용방법 다시 보기" title="How to use">How to use</button>
+  </div>
+  <button class="fab-btn fab-main" id="fabMain" aria-label="메뉴 열기" title="메뉴">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+  </button>
+</div>
+
+
 <script>
   const CATEGORIES = [
     "hair-long","hair-short","hair-pony","hair-twin","hair-etc",
@@ -1348,6 +1457,16 @@
       });
   }
 
+  // ---- 구글 드라이브(lh3.googleusercontent.com) 이미지는 원본 그대로 내려오기 때문에,
+  // 표시 용도에 맞는 사이즈 파라미터(=w숫자)를 붙여서 구글이 즉석에서 리사이징한 가벼운 버전을 받아오게 함.
+  // 구글 드라이브 링크가 아닌 경우(유튜브 썸네일, 기타 이미지 호스팅)는 원본 URL을 그대로 반환.
+  function driveThumb(url, width){
+    if(!url) return url;
+    const m = url.match(/^(https?:\/\/lh3\.googleusercontent\.com\/d\/[^=?&\s]+)/);
+    if(!m) return url;
+    return m[1] + '=w' + width;
+  }
+
   // ---- placeholder demo data (구글 시트 연결 전까지 보여줄 예시 데이터) ----
   function generateDemoItems(){
     const items = [];
@@ -1398,7 +1517,7 @@
     const badgeHtml = (showBadge && item.status) ? `<span class="status-badge ${item.status.cls}">${item.status.label}</span>` : '';
     const descHtml = item.desc ? `<div class="item-desc">${item.desc}</div>` : '';
     const thumbInner = item.image
-      ? `<img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;">`
+      ? `<img src="${driveThumb(item.image, 400)}" alt="${item.name}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">`
       : '이미지 준비중<br>(썸네일 추가)';
     return `<div class="item-card">
         <a class="item-thumb" href="${item.link}" target="_blank" rel="noopener">${thumbInner}</a>
@@ -1466,9 +1585,9 @@
         if(!cover){
           inner = '이미지 준비중<br>(썸네일 추가)';
         } else if(cover.type === 'youtube'){
-          inner = `<img src="https://img.youtube.com/vi/${cover.videoId}/hqdefault.jpg" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;"><span class="play-badge">▶</span>`;
+          inner = `<img src="https://img.youtube.com/vi/${cover.videoId}/hqdefault.jpg" alt="${item.title}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;"><span class="play-badge">▶</span>`;
         } else {
-          inner = `<img src="${cover.url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;">`;
+          inner = `<img src="${driveThumb(cover.url, 500)}" alt="${item.title}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">`;
         }
         card.innerHTML = `${inner}
           <div class="portfolio-overlay">
@@ -1581,7 +1700,7 @@
       lightboxStage.innerHTML = `<iframe src="https://www.youtube.com/embed/${entry.media.videoId}?autoplay=1" title="${entry.item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;"></iframe>`;
     } else {
       sizeLightboxStage(is3DWide ? 19 : 1, is3DWide ? 12 : 1);
-      lightboxStage.innerHTML = `<img src="${entry.media.url}" alt="${entry.item.title}" style="width:100%;height:100%;object-fit:cover;">`;
+      lightboxStage.innerHTML = `<img src="${driveThumb(entry.media.url, 1400)}" alt="${entry.item.title}" decoding="async" style="width:100%;height:100%;object-fit:cover;">`;
     }
 
     // 같은 작업물의 미디어 개수만큼 점(dot) 인디케이터 표시
@@ -1682,6 +1801,15 @@
     modal.classList.add('open');
   }
 
+  // FAB의 "How to use" 버튼처럼 세션 확인 여부와 상관없이 무조건 안내 모달을 다시 띄울 때 사용
+  function forceShowBoothNotice(){
+    const modal = document.getElementById('boothNoticeModal');
+    if(!modal) return;
+    document.getElementById('noticePage1').style.display = '';
+    document.getElementById('noticePage2').style.display = 'none';
+    modal.classList.add('open');
+  }
+
   const boothNoticeNext = document.getElementById('boothNoticeNext');
   if(boothNoticeNext){
     boothNoticeNext.addEventListener('click', () => {
@@ -1727,7 +1855,7 @@
         img.fetchPriority = 'low';
         img.loading = 'lazy';
       }
-      img.src = url;
+      img.src = driveThumb(url, 1600);
       img.alt = '';
       img.className = 'slide-img' + (i === 0 ? ' active' : '');
       stack.appendChild(img);
@@ -1805,6 +1933,75 @@
       setTimeout(() => { label.textContent = original; }, 1500);
     });
   }
+
+  // ---- floating action buttons ----
+  const fabStack = document.getElementById('fabStack');
+  const fabMain = document.getElementById('fabMain');
+  const fabTop = document.getElementById('fabTop');
+  const fabHowTo = document.getElementById('fabHowTo');
+
+  function closeFabMenu(){
+    fabStack.classList.remove('open');
+    fabMain.classList.remove('open');
+  }
+
+  if(fabMain){
+    fabMain.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = fabStack.classList.toggle('open');
+      fabMain.classList.toggle('open', isOpen);
+    });
+  }
+
+  // 메뉴가 열려있을 때 바깥을 클릭하면 자동으로 닫히도록
+  document.addEventListener('click', (e) => {
+    if(fabStack && fabStack.classList.contains('open') && !fabStack.contains(e.target)){
+      closeFabMenu();
+    }
+  });
+
+  if(fabTop){
+    fabTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeFabMenu();
+    });
+  }
+
+  if(fabHowTo){
+    fabHowTo.addEventListener('click', () => {
+      forceShowBoothNotice();
+      closeFabMenu();
+    });
+  }
+
+  // ---- 1% 확률 이스터에그 (FAB 버튼 클릭시 시도) ----
+  const EASTER_EGG_IMAGE = 'https://item.kakaocdn.net/do/ecaebdf2ccd9ce241d5011857ffbd7bf26397d82c8691bdabf557d1536959d9c';
+  let easterEggActive = false;
+
+  function tryTriggerEasterEgg(){
+    if(easterEggActive) return;
+    if(Math.random() >= 0.01) return; // 1% 확률
+    easterEggActive = true;
+
+    const egg = document.createElement('img');
+    egg.src = EASTER_EGG_IMAGE;
+    egg.alt = '';
+    egg.className = 'easter-egg';
+    document.body.appendChild(egg);
+
+    setTimeout(() => {
+      egg.classList.add('fade-out');
+    }, 10000);
+
+    setTimeout(() => {
+      egg.remove();
+      easterEggActive = false;
+    }, 11200);
+  }
+
+  [fabMain, fabTop, fabHowTo].forEach(btn => {
+    if(btn) btn.addEventListener('click', tryTriggerEasterEgg);
+  });
 
   // ---- search ----
   const searchInput = document.getElementById('searchInput');
