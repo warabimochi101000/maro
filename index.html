@@ -1587,7 +1587,7 @@
         } else if(cover.type === 'youtube'){
           inner = `<img src="https://img.youtube.com/vi/${cover.videoId}/hqdefault.jpg" alt="${item.title}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;"><span class="play-badge">▶</span>`;
         } else {
-          inner = `<img src="${driveThumb(cover.url, 500)}" alt="${item.title}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">`;
+          inner = `<img src="${driveThumb(cover.url, cat === 'portfolio3d' ? 1100 : 900)}" alt="${item.title}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">`;
         }
         card.innerHTML = `${inner}
           <div class="portfolio-overlay">
