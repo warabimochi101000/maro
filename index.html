@@ -1420,7 +1420,8 @@
           link: r.link || '#',
           image: r.image_url || ''
         };
-      });
+      })
+      .reverse(); // 시트에서 새로 추가한 상품이 맨 아래에 쌓이므로, 화면에는 최신순(역순)으로 보여줌
   }
 
   function buildPortfolioFromRows(rows){
@@ -1428,7 +1429,7 @@
       title: r.title || '',
       desc: r.desc || '',
       media: parseMediaList(r.media || r.image_url || '')
-    }));
+    })).reverse(); // 시트에서 새로 추가한 작업물이 맨 아래에 쌓이므로, 화면에는 최신순(역순)으로 보여줌
   }
 
   // ---- 이미지/유튜브 링크를 섞어서 넣을 수 있는 미디어 파서 ----
