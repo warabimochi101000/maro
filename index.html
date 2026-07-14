@@ -595,7 +595,8 @@
   }
   .lightbox.open{ display: flex; }
   .lightbox-stage{
-    width: min(70vw, 620px);
+    width: min(90vw, 1400px);
+    max-height: 78vh;
     aspect-ratio: 1/1;
     background: #2a2a2a;
     border-radius: var(--radius);
@@ -606,16 +607,36 @@
     overflow: hidden;
   }
   .lightbox-stage.is-video{
-    width: min(80vw, 860px);
+    width: min(92vw, 1400px);
     aspect-ratio: 16/9;
   }
   .lightbox-caption{
-    width: min(70vw, 620px);
-    margin-top: 20px;
+    width: min(90vw, 1400px);
+    margin-top: 16px;
     color: #fff;
   }
   .lightbox-caption.is-video{
-    width: min(80vw, 860px);
+    width: min(92vw, 1400px);
+  }
+  .lightbox-dots{
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .lightbox-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .lightbox-dot.active{
+    background: #fff;
+    transform: scale(1.25);
   }
   .lightbox-caption .portfolio-title{
     font-size: 1.15rem;
@@ -1147,6 +1168,7 @@
   <div class="lightbox-caption" id="lightboxCaption">
     <div class="portfolio-title" id="lightboxTitle"></div>
     <div class="portfolio-desc" id="lightboxDesc"></div>
+    <div class="lightbox-dots" id="lightboxDots"></div>
   </div>
   <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="다음">&#8250;</button>
 </div>
@@ -1548,6 +1570,23 @@
     } else {
       lightboxStage.innerHTML = `<img src="${entry.media.url}" alt="${entry.item.title}" style="width:100%;height:100%;object-fit:contain;">`;
     }
+
+    // 같은 작업물의 미디어 개수만큼 점(dot) 인디케이터 표시
+    const lightboxDots = document.getElementById('lightboxDots');
+    if(lightboxDots){
+      const itemMediaFlatIndexes = flat
+        .map((f, i) => ({ f, i }))
+        .filter(x => x.f.itemIdx === entry.itemIdx)
+        .map(x => x.i);
+      if(itemMediaFlatIndexes.length > 1){
+        lightboxDots.innerHTML = itemMediaFlatIndexes.map(flatIdx => {
+          const isActive = flatIdx === lightboxIndex;
+          return `<button type="button" class="lightbox-dot${isActive ? ' active' : ''}" data-flat-index="${flatIdx}" aria-label="이미지로 이동"></button>`;
+        }).join('');
+      } else {
+        lightboxDots.innerHTML = '';
+      }
+    }
   }
 
   function openLightbox(cat, itemIdx){
@@ -1573,6 +1612,14 @@
   document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
   document.getElementById('lightboxPrev').addEventListener('click', (e) => { e.stopPropagation(); lightboxStep(-1); });
   document.getElementById('lightboxNext').addEventListener('click', (e) => { e.stopPropagation(); lightboxStep(1); });
+
+  document.getElementById('lightboxDots').addEventListener('click', (e) => {
+    const dot = e.target.closest('.lightbox-dot');
+    if(!dot) return;
+    e.stopPropagation();
+    lightboxIndex = parseInt(dot.dataset.flatIndex, 10);
+    renderLightbox();
+  });
 
   lightbox.addEventListener('click', (e) => {
     if(e.target === lightbox) closeLightbox();
