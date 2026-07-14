@@ -854,23 +854,16 @@
   .easter-egg{
     position: fixed;
     top: 0; left: 0;
-    width: 90px;
-    height: 90px;
+    width: 170px;
+    height: 170px;
     z-index: 3000;
     pointer-events: none;
     object-fit: contain;
     opacity: 1;
-    transition: opacity 1.2s ease;
-    animation: eggRoll 4.2s linear infinite;
+    transition: opacity 1.3s ease;
+    will-change: transform;
   }
   .easter-egg.fade-out{ opacity: 0; }
-  @keyframes eggRoll{
-    0%   { transform: translate(-8vw, 58vh) rotate(0deg); }
-    22%  { transform: translate(38vw, 14vh) rotate(480deg); }
-    48%  { transform: translate(92vw, 66vh) rotate(960deg); }
-    74%  { transform: translate(24vw, 40vh) rotate(1440deg); }
-    100% { transform: translate(-8vw, 58vh) rotate(1920deg); }
-  }
 
   .menu-toggle{ display:none; }
 
@@ -1998,6 +1991,7 @@
 
   // ---- 1% 확률 이스터에그 (FAB 버튼 클릭시 시도) ----
   const EASTER_EGG_IMAGE = 'https://item.kakaocdn.net/do/ecaebdf2ccd9ce241d5011857ffbd7bf26397d82c8691bdabf557d1536959d9c';
+  const EGG_SIZE = 170;
   let easterEggActive = false;
 
   function tryTriggerEasterEgg(){
@@ -2011,14 +2005,61 @@
     egg.className = 'easter-egg';
     document.body.appendChild(egg);
 
-    setTimeout(() => {
-      egg.classList.add('fade-out');
-    }, 10000);
+    // 왼쪽 또는 오른쪽 벽에서 튀어나오듯 등장
+    const fromLeft = Math.random() < 0.5;
+    let x = fromLeft ? -EGG_SIZE : window.innerWidth;
+    const y = window.innerHeight - EGG_SIZE - 28; // 바닥에 붙어서 굴러다니는 느낌
+    let dir = fromLeft ? 1 : -1;
+    let rotation = 0;
 
-    setTimeout(() => {
-      egg.remove();
-      easterEggActive = false;
-    }, 11200);
+    const baseSpeed = 0.55;   // 평소엔 느긋하게 굴러다님
+    const fleeSpeed = 3.2;    // 마우스가 가까이 오면 도망가는 속도
+    let speed = baseSpeed;
+
+    let mouseX = null, mouseY = null;
+    function onMouseMove(e){ mouseX = e.clientX; mouseY = e.clientY; }
+    document.addEventListener('mousemove', onMouseMove);
+
+    const startTime = performance.now();
+    const lifespan = 10000; // 10초 뒤 페이드아웃 시작
+    let rafId;
+
+    function frame(now){
+      // 마우스가 닿을 듯 가까워지면 반대 방향으로 굴러서 도망감
+      if(mouseX !== null){
+        const cx = x + EGG_SIZE / 2;
+        const cy = y + EGG_SIZE / 2;
+        const dist = Math.hypot(cx - mouseX, cy - mouseY);
+        if(dist < 130){
+          dir = cx >= mouseX ? 1 : -1;
+          speed = fleeSpeed;
+        } else {
+          speed += (baseSpeed - speed) * 0.03; // 다시 서서히 느긋한 속도로 복귀
+        }
+      }
+
+      x += dir * speed;
+
+      // 벽에 부딪히면 튕겨나옴
+      if(x <= 0){ x = 0; dir = 1; }
+      else if(x + EGG_SIZE >= window.innerWidth){ x = window.innerWidth - EGG_SIZE; dir = -1; }
+
+      rotation += dir * speed * 4.2; // 굴러가는 방향/속도에 맞춰 회전
+
+      egg.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+
+      if(now - startTime < lifespan){
+        rafId = requestAnimationFrame(frame);
+      } else {
+        egg.classList.add('fade-out');
+        document.removeEventListener('mousemove', onMouseMove);
+        setTimeout(() => {
+          egg.remove();
+          easterEggActive = false;
+        }, 1400);
+      }
+    }
+    rafId = requestAnimationFrame(frame);
   }
 
   [fabMain, fabTop, fabHowTo].forEach(btn => {
