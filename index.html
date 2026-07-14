@@ -540,7 +540,7 @@
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  #grid-portfolio3d .portfolio-card{ aspect-ratio: 4/3; }
+  #grid-portfolio3d .portfolio-card{ aspect-ratio: 19/12; }
   #grid-portfolio3d.portfolio-grid{ grid-template-columns: 1fr; }
   @media (min-width: 701px){
     #grid-portfolio3d.portfolio-grid{ grid-template-columns: repeat(2, 1fr); }
@@ -1561,14 +1561,18 @@
 
     lightboxStage.classList.remove('is-video');
     lightboxCaption.classList.remove('is-video');
+    const is3DWide = lightboxCat === 'portfolio3d';
     if(!entry.media){
+      lightboxStage.style.aspectRatio = is3DWide ? '19/12' : '1/1';
       lightboxStage.innerHTML = '이미지 준비중<br>(썸네일 추가)';
     } else if(entry.media.type === 'youtube'){
       lightboxStage.classList.add('is-video');
       lightboxCaption.classList.add('is-video');
+      lightboxStage.style.aspectRatio = '';
       lightboxStage.innerHTML = `<iframe src="https://www.youtube.com/embed/${entry.media.videoId}?autoplay=1" title="${entry.item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;"></iframe>`;
     } else {
-      lightboxStage.innerHTML = `<img src="${entry.media.url}" alt="${entry.item.title}" style="width:100%;height:100%;object-fit:contain;">`;
+      lightboxStage.style.aspectRatio = is3DWide ? '19/12' : '1/1';
+      lightboxStage.innerHTML = `<img src="${entry.media.url}" alt="${entry.item.title}" style="width:100%;height:100%;object-fit:cover;">`;
     }
 
     // 같은 작업물의 미디어 개수만큼 점(dot) 인디케이터 표시
