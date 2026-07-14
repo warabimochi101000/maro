@@ -715,6 +715,12 @@
     color: var(--ink);
     font-weight: 700;
   }
+  .notice-modal-image{
+    display: block;
+    width: 100%;
+    border-radius: var(--radius);
+    margin-bottom: 34px;
+  }
   .notice-modal-confirm{
     width: 100%;
     padding: 17px;
@@ -1161,15 +1167,22 @@
 
 <div class="notice-modal" id="boothNoticeModal">
   <div class="notice-modal-box">
-    <div class="notice-modal-title">안내사항</div>
-    <ul class="notice-modal-list">
-      <li><strong>사용하실 에셋은 의뢰자님께서 사용 규약을 한번 더 확인해 주셔야 합니다!</strong></li>
-      <li><strong>ALL이라 적혀 있어도 에셋마다 사용 가능한 아바타가 다릅니다, 셀렉시 참고 부탁드립니다!</strong></li>
-      <li>하단의 아바타 이름 클릭시 아바타별로 보유중인 에셋을 한꺼번에 확인 가능합니다</li>
-      <li>우측 상단의 검색 기능을 활용하셔도 됩니다!</li>
-      <li>이미지 클릭시 부스 링크로 넘어갑니다!</li>
-    </ul>
-    <button class="notice-modal-confirm" id="boothNoticeConfirm">확인했습니다</button>
+    <div class="notice-modal-page" id="noticePage1">
+      <div class="notice-modal-title">사용방법</div>
+      <img class="notice-modal-image" src="https://lh3.googleusercontent.com/d/1d0ygUeY430t7iGF2BagbO0sy8SU8Upjc" alt="사용방법">
+      <button class="notice-modal-confirm" id="boothNoticeNext">다음</button>
+    </div>
+    <div class="notice-modal-page" id="noticePage2" style="display:none;">
+      <div class="notice-modal-title">안내사항</div>
+      <ul class="notice-modal-list">
+        <li><strong>사용하실 에셋은 의뢰자님께서 사용 규약을 한번 더 확인해 주셔야 합니다!</strong></li>
+        <li><strong>ALL이라 적혀 있어도 에셋마다 사용 가능한 아바타가 다릅니다, 셀렉시 참고 부탁드립니다!</strong></li>
+        <li>하단의 아바타 이름 클릭시 아바타별로 보유중인 에셋을 한꺼번에 확인 가능합니다</li>
+        <li>우측 상단의 검색 기능을 활용하셔도 됩니다!</li>
+        <li>이미지 클릭시 부스 링크로 넘어갑니다!</li>
+      </ul>
+      <button class="notice-modal-confirm" id="boothNoticeConfirm">확인했습니다</button>
+    </div>
   </div>
 </div>
 
@@ -1664,7 +1677,17 @@
     const modal = document.getElementById('boothNoticeModal');
     if(!modal) return;
     if(sessionStorage.getItem('boothNoticeAck')) return;
+    document.getElementById('noticePage1').style.display = '';
+    document.getElementById('noticePage2').style.display = 'none';
     modal.classList.add('open');
+  }
+
+  const boothNoticeNext = document.getElementById('boothNoticeNext');
+  if(boothNoticeNext){
+    boothNoticeNext.addEventListener('click', () => {
+      document.getElementById('noticePage1').style.display = 'none';
+      document.getElementById('noticePage2').style.display = '';
+    });
   }
 
   const boothNoticeConfirm = document.getElementById('boothNoticeConfirm');
